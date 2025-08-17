@@ -7,6 +7,12 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+// Root route for testing
+app.get("/", (req, res) => {
+  res.send("OpenRouter Backend is running! Use POST /ask to chat with the AI.");
+});
+
+// AI chat route
 app.post("/ask", async (req, res) => {
   try {
     const { message, model } = req.body;
@@ -30,5 +36,6 @@ app.post("/ask", async (req, res) => {
   }
 });
 
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
