@@ -1,21 +1,21 @@
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import cors from "cors";  // ✅ import cors
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());  // ✅ allow all origins
 
-// Root route for testing
 app.get("/", (req, res) => {
   res.send("OpenRouter Backend is running! Use POST /ask to chat with the AI.");
 });
 
-// AI chat route
 app.post("/ask", async (req, res) => {
   try {
-    const { message, model } = req.body;
+    const { message } = req.body;
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -24,7 +24,7 @@ app.post("/ask", async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: model,
+        model: "openai/gpt-oss-20b",
         messages: [{ role: "user", content: message }]
       })
     });
@@ -36,6 +36,6 @@ app.post("/ask", async (req, res) => {
   }
 });
 
-// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
